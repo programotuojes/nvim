@@ -1,6 +1,6 @@
 return {
     "nvim-neo-tree/neo-tree.nvim",
-    enabled = true,
+    lazy = false,
     branch = "v3.x",
     dependencies = {
         "nvim-lua/plenary.nvim",
@@ -14,21 +14,19 @@ return {
             "<cmd>Neotree toggle<CR>",
             desc = "File explorer",
         },
+        {
+            "<leader>1",
+            "<cmd>Neotree reveal<CR>",
+            desc = "File explorer (current file)",
+        },
     },
     opts = {
         close_if_last_window = true,
         window = {
             position = "float",
-        }
+        },
+        filesystem = {
+            hijack_netrw_behavior = "open_current",
+        },
     },
-    -- init = function()
-    --     if vim.fn.argc() == 0 then
-    --         return
-    --     end
-
-    --     local stat = vim.loop.fs_stat(vim.fn.argv(0))
-    --     if stat and stat.type == "directory" then
-    --         require("neo-tree")
-    --     end
-    -- end,
 }

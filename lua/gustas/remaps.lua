@@ -36,3 +36,5 @@ vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnos
 -- Quick fix list
 vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Previous quick fix item" })
 vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Next quick fix item" })
+
+vim.keymap.set("n", "<A-L>", vim.lsp.buf.format, { desc = "Format" })

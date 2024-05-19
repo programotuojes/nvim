@@ -9,12 +9,12 @@ local function create_opts()
         return vim.fn.fnamemodify(dot_git_path, ":h")
     end
 
-    local opts = {}
+    local opts = {
+        hidden = true,
+    }
 
     if is_git_repo() then
-        opts = {
-            cwd = get_git_root(),
-        }
+        table.insert(opts, get_git_root())
     end
 
     return opts
@@ -27,15 +27,12 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
-    opts = {
-        defaults = {
-            layout_strategy = "vertical",
-            layout_config = {
-                preview_cutoff = 0,
-            },
-        },
-    },
     keys = {
+        {
+            "<leader>tr",
+            function() require("telescope.builtin").resume() end,
+            desc = "Resume previous Telescope search",
+        },
         {
             "<leader>/",
             function() require("telescope.builtin").live_grep(create_opts()) end,
@@ -53,17 +50,21 @@ return {
         },
         {
             "<leader>r",
-            function() require("telescope.builtin").lsp_references({
-                include_declaration = false,
-                show_line = false,
-            }) end,
+            function()
+                require("telescope.builtin").lsp_references({
+                    include_declaration = false,
+                    show_line = false,
+                })
+            end,
             desc = "LSP references",
         },
         {
             "<leader>d",
-            function() require("telescope.builtin").diagnostics({
-                bufnr = nil,
-            }) end,
+            function()
+                require("telescope.builtin").diagnostics({
+                    bufnr = nil,
+                })
+            end,
             desc = "All diagnostics",
         },
         {
@@ -71,6 +72,10 @@ return {
             function() require("telescope.builtin").git_status() end,
             desc = "Git status",
         },
+        {
+            "<leader>:",
+            function() require("telescope.builtin").command_history() end,
+            desc = "Command history",
+        },
     },
 }
-

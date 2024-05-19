@@ -6,8 +6,11 @@ return {
         configs.setup({
             ensure_installed = { "lua" },
             auto_install = true,
-            highlight = { enable = true },
-            indent = { 
+            highlight = {
+                enable = true,
+                additional_vim_regex_highlighting = true,
+            },
+            indent = {
                 enable = true,
                 disable = { "dart" },
             },

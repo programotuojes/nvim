@@ -11,7 +11,7 @@ local function on_attach(_, bufnr)
     end
 
     nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-    nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+    nmap("<A-cr>", vim.lsp.buf.code_action, "Code action")
 
     nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
     nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
@@ -47,7 +47,11 @@ return {
         "hrsh7th/nvim-cmp",
         event = "InsertEnter",
         dependencies = {
-            { "L3MON4D3/LuaSnip" },
+            {
+                "L3MON4D3/LuaSnip",
+                version = "v2.*",
+                build = "make install_jsregexp"
+            },
             { "rafamadriz/friendly-snippets" },
         },
         config = function()
@@ -100,19 +104,88 @@ return {
         end,
     },
     {
+        "mfussenegger/nvim-dap",
+        keys = {
+            {
+                "<C-b>",
+                function() require('dap').toggle_breakpoint() end,
+                desc = "Debugger: toggle breakpoint",
+            },
+            {
+                "<F8>",
+                function() require('dap').step_over() end,
+                desc = "Debugger: step over",
+            },
+            {
+                "<F9>",
+                function() require('dap').continue() end,
+                desc = "Debugger: continue",
+            },
+            {
+                "<A-b>",
+                function() require('dap').set_exception_breakpoints() end,
+                desc = "Debugger: set exception breakpoints",
+            },
+        },
+    },
+    {
+        "rcarriga/nvim-dap-ui",
+        dependencies = {
+            -- "mfussenegger/nvim-dap",
+            "nvim-neotest/nvim-nio",
+        },
+        init = function()
+            require('dapui').setup()
+        end,
+        keys = {
+            {
+                "<F21>",
+                function() require('dapui').toggle() end,
+                desc = "Toggle debugger UI",
+            },
+        }
+    },
+    {
         "akinsho/flutter-tools.nvim",
         dependencies = {
             { "nvim-lua/plenary.nvim" },
             { "stevearc/dressing.nvim" },
             { "hrsh7th/cmp-nvim-lsp" },
         },
+        ft = "dart",
+        keys = {
+            { "<F22>",     "<cmd>FlutterRun<cr>",         desc = "Flutter: run", },
+            { "<leader>0", "<cmd>FlutterVisualDebug<cr>", desc = "Flutter: show guidelines", },
+        },
         config = function()
+            local flutter_sdk = os.getenv("FLUTTER_SDK")
             require("flutter-tools").setup {
-                flutter_lookup_cmd = "which flutter",
-                widget_guides = { enabled = true },
+                flutter_path = flutter_sdk .. "/bin/flutter",
+                widget_guides = {
+                    enabled = true,
+                },
+                dev_log = {
+                    enabled = false,
+                },
+                debugger = {
+                    enabled = true,
+                    run_via_dap = true,
+                },
                 lsp = {
                     capabilities = get_capabilities(),
                     on_attach = on_attach,
+                    settings = {
+                        analysisExcludedFolders = {
+                            "/home/gustas/.pub-cache",
+                            flutter_sdk,
+                        },
+                        lineLength = 120,
+                        completeFunctionCalls = true,
+                        renameFilesWithClasses = "prompt",
+                        updateImportsOnRename = true,
+                        debugSdkLibraries = false,
+                        debugExternalLibraries = false,
+                    },
                 },
             }
         end,
@@ -125,7 +198,10 @@ return {
             { "williamboman/mason.nvim" },
             { "williamboman/mason-lspconfig.nvim" },
             { "hrsh7th/cmp-nvim-lsp" },
-            { "folke/neodev.nvim", opts = {}, },
+            {
+                "folke/neodev.nvim",
+                opts = {},
+            },
         },
         config = function()
             local servers = {
@@ -156,6 +232,7 @@ return {
                         enable_import_completion = true,
                         enable_roslyn_analyzers = true,
                         organize_imports_on_format = true,
+                        analyze_open_documents_only = true,
                     }
                 end,
             }

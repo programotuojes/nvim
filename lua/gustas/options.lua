@@ -1,3 +1,5 @@
+vim.o.termguicolors = true
+
 -- Search
 vim.o.hlsearch = true
 vim.o.ignorecase = true
@@ -34,3 +36,20 @@ vim.opt.listchars = {
 
 -- Wrapping
 vim.o.breakindent = true
+
+-- Highlight on yank
+vim.api.nvim_create_autocmd('TextYankPost', {
+    group = vim.api.nvim_create_augroup('highlight_yank', {}),
+    desc = 'Hightlight selection on yank',
+    pattern = '*',
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+})
+
+-- Spelling
+vim.o.spellang = 'en_us'
+vim.o.spell = true
+vim.o.spelloptions = 'camel'
+vim.o.spellcapcheck = ''
+
