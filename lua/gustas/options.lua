@@ -40,7 +40,7 @@ vim.o.breakindent = true
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = vim.api.nvim_create_augroup('highlight_yank', {}),
-    desc = 'Hightlight selection on yank',
+    desc = 'Highlight selection on yank',
     pattern = '*',
     callback = function()
         vim.highlight.on_yank()
@@ -48,7 +48,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- Spelling
-vim.o.spellang = 'en_us'
+vim.o.spelllang = 'en_us,lt'
 vim.o.spell = true
 vim.o.spelloptions = 'camel'
 vim.o.spellcapcheck = ''
