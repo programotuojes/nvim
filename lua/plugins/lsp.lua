@@ -139,7 +139,8 @@ return {
         end,
         keys = {
             {
-                "<F21>",
+                "<S-F9>",
+                -- "<F21>",
                 function() require('dapui').toggle() end,
                 desc = "Toggle debugger UI",
             },
@@ -154,7 +155,12 @@ return {
         },
         ft = "dart",
         keys = {
-            { "<F22>",     "<cmd>FlutterRun<cr>",         desc = "Flutter: run", },
+            {
+                "<S-F10>",
+                -- "<F22>",
+                "<cmd>FlutterRun<cr>",
+                desc = "Flutter: run",
+            },
             { "<leader>0", "<cmd>FlutterVisualDebug<cr>", desc = "Flutter: show guidelines", },
         },
         config = function()
@@ -214,6 +220,18 @@ return {
             }
 
             local capabilities = get_capabilities()
+            require("lspconfig").nixd.setup({
+                settings = {
+                    nixd = {
+                        formatting = {
+                            command = { "nixpkgs-fmt" },
+                        },
+                        diagnostic = {
+                            suppress = { "sema-escaping-with", "escaping-this-with", "var-bind-to-this", },
+                        },
+                    },
+                },
+            })
             require("mason").setup()
             require("mason-lspconfig").setup_handlers {
                 function(server_name)
